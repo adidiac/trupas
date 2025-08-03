@@ -66,7 +66,7 @@ export default function About() {
           />
         </div>
         <div className="text-block">
-          <h2>Despre Trupass</h2>
+          <h2>Despre Trupas</h2>
           <p>
             Suntem o trupă inovatoare care redefinește energia muzicii live cu tehnologii
             avansate și performanțe captivante.
