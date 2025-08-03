@@ -6,7 +6,8 @@ import React, { useEffect } from 'react'
 export default function About() {
   useEffect(() => {
     const canvas = document.getElementById('bg-particles') as HTMLCanvasElement
-    const ctx = canvas?.getContext('2d')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
     if (!ctx) return
 
     let particles: { x: number; y: number; vx: number; vy: number; size: number }[] = []
