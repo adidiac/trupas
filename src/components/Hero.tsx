@@ -75,22 +75,28 @@ export default function Hero() {
           background: rgba(59, 6, 82, 0.5);
           pointer-events: none;
         }
-        .hero-title {
+       .hero-title {
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           color: #fff;
-          font-size: 4rem;
+          /* fluid font size: min 2rem, scales with viewport, max 5rem */
+          font-size: clamp(2rem, 5vw, 5rem);
           font-weight: 800;
           letter-spacing: 1px;
           text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
           z-index: 2;
-          height: 1.2em;
-          overflow: hidden;
+          /* allow multi-line and wrap */
+          width: 90%;
+          max-width: 800px;
+          text-align: center;
+          white-space: normal;
+          overflow: visible;
+          line-height: 1.1;
         }
         .hero-title .fade {
-          display: inline-block;
+          display: block;
           opacity: 0;
           animation: fadeIn 1s ease-out forwards;
         }
@@ -110,7 +116,7 @@ export default function Hero() {
             margin-top: -64px;
           }
           .hero-title {
-            font-size: 2.5rem;
+            font-size: clamp(1.5rem, 6vw, 3rem);
           }
         }
       `}</style>
