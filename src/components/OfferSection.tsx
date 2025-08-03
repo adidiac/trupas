@@ -88,7 +88,6 @@ export default function OfferSection() {
                   </li>
                 ))}
               </ul>
-              <div className="price">{o.price}</div>
             </div>
           </div>
         ))}
