@@ -78,6 +78,41 @@ export default function Contact() {
           />
           <ValidationError prefix="Email" field="email" errors={state.errors} />
 
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            placeholder="Număr de telefon"
+            required
+          />
+          <ValidationError prefix="Phone" field="phone" errors={state.errors} />
+
+          <input
+            id="date"
+            name="date"
+            type="date"
+            placeholder="Data nunții"
+            required
+          />
+          <ValidationError prefix="Date" field="date" errors={state.errors} />
+
+          <input
+            id="city"
+            name="city"
+            placeholder="Orașul"
+            required
+          />
+          <ValidationError prefix="City" field="city" errors={state.errors} />
+
+          <input
+            id="guests"
+            name="guests"
+            type="number"
+            placeholder="Număr estimativ de invitați"
+            required
+          />
+          <ValidationError prefix="Guests" field="guests" errors={state.errors} />
+
           <textarea
             id="message"
             name="message"
@@ -87,7 +122,7 @@ export default function Contact() {
           <ValidationError prefix="Message" field="message" errors={state.errors} />
 
           <button type="submit" disabled={state.submitting}>
-            {state.submitting ? 'Se trimite…' : 'Trimite'}
+            {state.submitting ? 'Se trimite…' : 'Cere ofertă'}
           </button>
         </form>
 
@@ -190,7 +225,7 @@ export default function Contact() {
           position: relative;
           z-index: 1;
           font-size: 3rem;
-          margin-bottom: 9rem;
+          margin-bottom: 4rem;
           background: linear-gradient(90deg, #64fff9, #f0c040);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -240,9 +275,6 @@ export default function Contact() {
           justify-content: center;
           gap: 1rem;
           font-size: 1rem;
-        }
-        .contact-info p {
-          color: #fff;
         }
         .social-links {
           display: flex;

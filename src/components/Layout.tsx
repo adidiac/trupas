@@ -1,6 +1,11 @@
+// src/components/Layout.tsx
 'use client'
+
 import React, { ReactNode } from 'react'
 import Navbar from './Navbar'
+
+const WHATSAPP_NUMBER = '+40744842061'; // Manager WhatsApp number
+const WHATSAPP_MESSAGE = encodeURIComponent('Bună! Aș dori mai multe detalii despre disponibilitate și preț.');
 
 type Props = { children: ReactNode }
 
@@ -13,6 +18,22 @@ export default function Layout({ children }: Props) {
         {children}
       </div>
 
+      {/* Floating WhatsApp Button */}
+      <a
+        href={`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${WHATSAPP_MESSAGE}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="whatsapp-button"
+        aria-label="Contactează-ne pe WhatsApp"
+      >
+        {/* WhatsApp icon from Simple Icons */}
+        <img
+          src="https://cdn.simpleicons.org/whatsapp/fff"
+          alt="WhatsApp"
+          className="whatsapp-icon"
+        />
+      </a>
+
       {/* Global & page‐wide styles */}
       <style jsx global>{`
         /* 1. CSS Variables for theming */
@@ -24,26 +45,11 @@ export default function Layout({ children }: Props) {
         }
 
         /* 2. Reset + base typography */
-        *,
-        *::before,
-        *::after {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
-          margin: 0;
-          padding: 0;
           background-color: rgb(59, 6, 82);
           color: #fff;
-          font-family: 'Segoe UI', Roboto, sans-serif;
-        }
-        main {
-          /* no padding-top here */
-        }
-        /* 2. Offset the fixed navbar height (64px) */
-        .page-content {
-          padding-top: 64px;
+          font-family: var(--base-font);
         }
 
         /* 3. Page container: full‐height + snap */
@@ -51,42 +57,31 @@ export default function Layout({ children }: Props) {
           width: 100vw;
           min-height: 100vh;
           scroll-snap-align: start;
-          background:rgb(59, 6, 82); 
+          background: rgb(59, 6, 82);
         }
 
-        /* 4. Utility: center section content */
-        .section-wrapper {
-          width: 100%;
-          height: 100vh;
+        /* Floating WhatsApp button */
+        .whatsapp-button {
+          position: fixed;
+          bottom: 2rem;
+          right: 2rem;
+          background: #25D366; /* WhatsApp green */
+          border-radius: 50%;
+          width: 3.5rem;
+          height: 3.5rem;
           display: flex;
           align-items: center;
           justify-content: center;
-          position: relative;
-          scroll-snap-align: start;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          z-index: 1000;
+          transition: transform 0.2s ease;
         }
-
-        /* 5. Headings */
-        h1, h2, h3 {
-          color: var(--brand-charcoal);
-          line-height: 1.2;
+        .whatsapp-button:hover {
+          transform: scale(1.1);
         }
-        h2 {
-          font-size: 2.25rem;
-          margin-bottom: 1rem;
-        }
-        p {
-          color: #555;
-          max-width: 800px;
-          margin-bottom: 1.5rem;
-        }
-
-        /* 6. Links */
-        a {
-          color: var(--brand-charcoal);
-          text-decoration: none;
-        }
-        a:hover {
-          color: var(--brand-gold);
+        .whatsapp-icon {
+          width: 28px;
+          height: 28px;
         }
       `}</style>
     </>
