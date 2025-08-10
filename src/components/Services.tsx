@@ -1,7 +1,7 @@
 // src/components/Services.tsx
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const services = [
   'Muzică live pentru nunți, botezuri, petreceri private, corporate events',
@@ -10,9 +10,41 @@ const services = [
   'Schela lumini: beam-uri, spoturi, LED par',
 ]
 
-export default function Services() {
-  const [showVideo, setShowVideo] = useState(false)
+/**
+ * Add/replace your images in /public/media/services/
+ * You can use .webp/.jpg/.png; mix is fine.
+ */
+const gallery = [
+  'https://res.cloudinary.com/dssmjjqlj/image/upload/v1754845397/trupas_d0or03.jpg',
+  'https://res.cloudinary.com/dssmjjqlj/image/upload/v1754851701/WhatsApp_Image_2025-08-03_at_22.11.00_mqjgnw.jpg',
+  'https://res.cloudinary.com/dssmjjqlj/image/upload/v1754851702/WhatsApp_Image_2025-08-03_at_22.10.59_1_aymzu2.jpg',
+]
 
+export default function Services() {
+  // ---- Carousel state ----
+  const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+
+  // touch/swipe refs
+  const startX = useRef<number | null>(null)
+  const deltaX = useRef(0)
+
+  const go = (i: number) => {
+    const len = gallery.length
+    if (len === 0) return
+    setIndex(((i % len) + len) % len) // safe modulo (wrap)
+  }
+  const next = () => go(index + 1)
+  const prev = () => go(index - 1)
+
+  // autoplay
+  useEffect(() => {
+    if (paused || gallery.length <= 1) return
+    const t = setInterval(next, 4000)
+    return () => clearInterval(t)
+  }, [index, paused])
+
+  // ---- Particles background ----
   useEffect(() => {
     const canvas = document.getElementById('bg-particles-svc') as HTMLCanvasElement
     if (!canvas) return
@@ -38,7 +70,7 @@ export default function Services() {
     function loop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = 'rgba(240,192,64,0.5)'
-      particles.forEach(p => {
+      particles.forEach((p) => {
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
         ctx.fill()
@@ -57,6 +89,26 @@ export default function Services() {
     return () => window.removeEventListener('resize', resize)
   }, [])
 
+  // touch handlers
+  const onTouchStart = (e: React.TouchEvent) => {
+    startX.current = e.touches[0].clientX
+    deltaX.current = 0
+    setPaused(true)
+  }
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (startX.current == null) return
+    deltaX.current = e.touches[0].clientX - startX.current
+  }
+  const onTouchEnd = () => {
+    if (startX.current != null) {
+      if (deltaX.current > 60) prev()
+      else if (deltaX.current < -60) next()
+    }
+    startX.current = null
+    deltaX.current = 0
+    setPaused(false)
+  }
+
   return (
     <section id="servicii" className="services-section">
       <canvas id="bg-particles-svc" className="bg-canvas" />
@@ -64,6 +116,7 @@ export default function Services() {
       <h2>Ce oferim</h2>
 
       <div className="services-content">
+        {/* Left: bullets */}
         <ul className="services-list">
           {services.map((s, i) => (
             <li key={i} style={{ animationDelay: `${i * 0.15}s` }}>
@@ -72,26 +125,54 @@ export default function Services() {
           ))}
         </ul>
 
-        <div className="video-container">
-          {showVideo ? (
-            <iframe
-              src="https://www.youtube.com/embed/p04RPX4PaoE?autoplay=1"
-              title="TRUPAS Band Live Preview"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          ) : (
-            <button
-              className="video-placeholder"
-              onClick={() => setShowVideo(true)}
-              aria-label="Redă video"
-            >
-              <img
-                src="https://img.youtube.com/vi/p04RPX4PaoE/hqdefault.jpg"
-                alt="TRUPAS Band preview"
-              />
-              <div className="play-button">▶︎</div>
-            </button>
+        {/* Right: carousel */}
+        <div
+          className="carousel"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+          aria-roledescription="carousel"
+        >
+          <div
+            className="track"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            {gallery.map((src, i) => (
+              <div className="slide" role="group" aria-label={`${i + 1} din ${gallery.length}`} key={src}>
+                <img
+                  src={src}
+                  alt={`TRUPAS – serviciu ${i + 1}`}
+                  loading="lazy"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = '0.2' }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* arrows */}
+          {gallery.length > 1 && (
+            <>
+              <button className="nav prev" aria-label="Anterior" onClick={prev}>‹</button>
+              <button className="nav next" aria-label="Următor" onClick={next}>›</button>
+            </>
+          )}
+
+          {/* dots */}
+          {gallery.length > 1 && (
+            <div className="dots" role="tablist">
+              {gallery.map((_, i) => (
+                <button
+                  key={i}
+                  role="tab"
+                  aria-selected={i === index}
+                  aria-label={`Afișează imaginea ${i + 1}`}
+                  className={`dot ${i === index ? 'active' : ''}`}
+                  onClick={() => go(i)}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
@@ -112,8 +193,7 @@ export default function Services() {
         }
         .bg-canvas {
           position: absolute;
-          top: 0;
-          left: 0;
+          inset: 0;
           width: 100%;
           height: 100%;
           z-index: 0;
@@ -122,12 +202,13 @@ export default function Services() {
           position: relative;
           z-index: 1;
           font-size: 3rem;
-          margin-bottom: 9rem;
+          margin-bottom: 6rem;
           background: linear-gradient(90deg, #64fff9, #f0c040);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           animation: fadeInUp 0.6s ease-out;
         }
+
         .services-content {
           position: relative;
           z-index: 1;
@@ -136,12 +217,11 @@ export default function Services() {
           gap: 3rem;
           width: 100%;
           max-width: 1200px;
+          align-items: center;
         }
-        .services-list {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
+
+        /* bullets */
+        .services-list { list-style: none; margin: 0; padding: 0; }
         .services-list li {
           background: rgba(0, 0, 0, 0.3);
           border: 2px solid rgba(240, 192, 64, 0.6);
@@ -155,60 +235,84 @@ export default function Services() {
           transform: translateY(20px);
           animation: fadeInUp 0.5s ease-out forwards;
         }
-        .video-container {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          
-        }
-        .video-placeholder {
+
+        /* carousel */
+        .carousel {
           position: relative;
-          border: none;
-          background: none;
-          padding: 0;
-          cursor: pointer;
-        }
-        .video-placeholder img {
-          display: block;
           width: 100%;
-          max-width: 480px;
-          border-radius: 0.75rem;
+          border-radius: 0.9rem;
+          overflow: hidden;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+          background: rgba(0,0,0,0.25);
+          /* keep a cinematic shape */
+          aspect-ratio: 16 / 9;
         }
-        .play-button {
+        .track {
+          display: flex;
+          height: 100%;
+          transition: transform 450ms ease;
+          will-change: transform;
+        }
+        .slide {
+          min-width: 100%;
+          height: 100%;
+          position: relative;
+        }
+        .slide img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          filter: contrast(1.05) saturate(1.05);
+        }
+
+        .nav {
           position: absolute;
           top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 3rem;
-          color: #f0c040;
-          text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-        }
-        iframe {
-          width: 100%;
-          max-width: 480px;
-          height: 270px;
+          transform: translateY(-50%);
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
           border: none;
-          border-radius: 0.75rem;
+          background: rgba(0,0,0,0.45);
+          color: #fff;
+          font-size: 1.6rem;
+          cursor: pointer;
+          display: grid;
+          place-items: center;
+          transition: background 0.2s ease;
         }
+        .nav:hover { background: rgba(0,0,0,0.65); }
+        .nav.prev { left: 10px; }
+        .nav.next { right: 10px; }
+
+        .dots {
+          position: absolute;
+          bottom: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 8px;
+        }
+        .dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          border: none;
+          background: rgba(255,255,255,0.5);
+          cursor: pointer;
+        }
+        .dot.active { background: #f0c040; }
+
         @keyframes fadeInUp {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          to { opacity: 1; transform: translateY(0); }
         }
-        @media (max-width: 768px) {
-          .services-content {
-            grid-template-columns: 1fr;
-          }
-          .services-list li {
-            font-size: 1rem;
-            padding: 1rem 1.5rem;
-          }
-          iframe,
-          .video-placeholder img {
-            max-width: 100%;
-            height: auto;
-          }
+
+        @media (max-width: 900px) {
+          .services-content { grid-template-columns: 1fr; gap: 2rem; }
+          .carousel { aspect-ratio: 16 / 9; }
+          .services-list li { font-size: 1rem; padding: 1rem 1.25rem; }
         }
       `}</style>
     </section>

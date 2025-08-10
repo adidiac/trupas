@@ -1,40 +1,44 @@
 // src/components/Repertoire.tsx
 'use client'
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 
-const lineup = [
-  'Voce feminina',
-  'Voce masculina',
-  'Solista populara',
-  'Chitara',
-  'Bass',
-  'Clape',
-  'Tobe',
-  'Trompeta',
-  'Saxofon',
-  'DJ',
+type Member = {
+  role: string
+  slug: string         // for icon path, e.g. "voce-feminina"
+  name: string         // member’s name; file should be /public/media/members/<name-lower>.jpg|png|webp
+  photo?: string       // optional custom path; if omitted we build from name
+}
+
+const members: Member[] = [
+  { role: 'Voce feminina',  slug: 'voce-feminina',  name: 'Marimi' },
+  { role: 'Voce masculina', slug: 'voce-masculina', name: 'Sorin' },
+  { role: 'Solista populara', slug: 'solista-populara', name: 'Gabriela' },
+  { role: 'Chitara',        slug: 'chitara',        name: 'Alex' },
+  { role: 'Bass',           slug: 'bass',           name: 'Sorina' },
+  { role: 'Clape',          slug: 'clape',          name: 'Florin' },
+  { role: 'Tobe',           slug: 'tobe',           name: 'George' },
+  { role: 'Trompeta',       slug: 'trompeta',       name: 'Sorin' },
+  { role: 'Saxofon',        slug: 'saxofon',        name: 'Saxofon' },
+  { role: 'DJ',             slug: 'dj',             name: 'DJ' },
 ]
 
-// contrasting color palette
+// card background colors (shuffled across)
 const colors = [
-  '#f0c040', // gold
-  '#64fff9', // cyan
-  '#ff4081', // pink
-  '#7c4dff', // purple
-  '#42a5f5', // blue
-  '#66bb6a', // green
-  '#ff8a65', // coral
-  '#ba68c8', // orchid
+  '#64fff9', '#f0c040', '#7c4dff', '#42a5f5',
+  '#66bb6a', '#ff8a65', '#ba68c8', '#ff4081'
 ]
+
+// build default photo path from name
+function photoFromName(name: string) {
+  const base = `/media/members/${name.toLowerCase()}`
+  if (name.toLowerCase() === 'saxofon') {
+    return [`${base}.png`, `${base}.webp`, `${base}.jpg`, ]
+  }
+  return [`${base}.jpeg`, `${base}.png`, `${base}.webp`]
+}
 
 export default function Repertoire() {
-  // generate a random color assignment once per render
-  const bgColors = useMemo(
-    () => lineup.map(() => colors[Math.floor(Math.random() * colors.length)]),
-    []
-  )
-
   useEffect(() => {
     const canvas = document.getElementById('bg-particles-rep') as HTMLCanvasElement
     if (!canvas) return
@@ -83,28 +87,51 @@ export default function Repertoire() {
     <section id="repertoriu" className="repertoire-section">
       <canvas id="bg-particles-rep" className="bg-canvas" />
       <h2>Componență trupă</h2>
+
       <div className="cards">
-        {lineup.map((role, idx) => {
-          const slug = role
-            .toLowerCase()
-            .replace(/[^a-z\u0103\u00e2\u00ee\u015f\u0163]+/g, '-')
-            .replace(/-+$/, '')
+        {members.map((m, idx) => {
+          const color = colors[idx % colors.length]
+          const candidates = m.photo ? [m.photo] : photoFromName(m.name)
+
           return (
-            <div
-              key={role}
+            <article
+              key={`${m.slug}-${m.name}-${idx}`}
               className="card"
-              style={{
-                animationDelay: `${idx * 0.1}s`,
-                background: bgColors[idx],
-              }}
+              style={{ background: color, animationDelay: `${idx * 0.08}s` }}
             >
-              <img
-                src={`/media/icons/${slug}.png`}
-                alt={role}
-                className="role-icon"
-              />
-              <span>{role}</span>
-            </div>
+              <div className="thumb">
+                {/* actual photo; if it fails, we hide it and show the icon */}
+                <img
+                  className="member-photo"
+                  src={candidates[0]}
+                  srcSet={candidates.join(', ')}
+                  alt={`${m.role} – ${m.name}`}
+                  loading="lazy"
+                  onError={(e) => {
+                    // hide the broken photo and reveal the icon
+                    const img = e.currentTarget
+                    img.style.display = 'none'
+                    const icon = img.nextElementSibling as HTMLImageElement | null
+                    if (icon) icon.style.display = 'block'
+                  }}
+                />
+                {/* fallback role icon (hidden until photo fails) */}
+                <img
+                  className="role-icon"
+                  src={`/media/icons/${m.slug}.png`}
+                  alt=""
+                  aria-hidden="true"
+                  style={{ display: 'none' }}
+                />
+                {/* soft overlay for readability */}
+                <div className="thumb-overlay" />
+              </div>
+
+              <div className="meta">
+                <h3>{m.role}</h3>
+                <span className="chip">{m.name}</span>
+              </div>
+            </article>
           )
         })}
       </div>
@@ -125,17 +152,16 @@ export default function Repertoire() {
         }
         .bg-canvas {
           position: absolute;
-          top: 0;
-          left: 0;
+          inset: 0;
           width: 100%;
           height: 100%;
           z-index: 0;
         }
-        .repertoire-section h2 {
+        h2 {
           position: relative;
           z-index: 1;
           font-size: 3rem;
-          margin: 0.5rem 0 12rem;
+          margin: 0.5rem 0 6rem;
           background: linear-gradient(90deg, #64fff9, #f0c040);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -145,63 +171,94 @@ export default function Repertoire() {
           position: relative;
           z-index: 1;
           display: grid;
-          grid-template-columns: repeat(5, minmax(140px, 1fr));
-          gap: 2.5rem;
+          grid-template-columns: repeat(5, minmax(180px, 1fr));
+          gap: 2.25rem;
           max-width: 1200px;
           margin: 0 auto;
         }
+
         .card {
-          border-radius: 1rem;
-          padding: 2.5rem;
+          border-radius: 1.25rem;
+          padding: 1rem;
           display: flex;
           flex-direction: column;
-          align-items: center;
+          align-items: stretch;
           opacity: 0;
           transform: translateY(20px);
           animation: fadeInUp 0.5s ease-out forwards;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
         .card:hover {
-          transform: scale(1.05);
-          box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+          transform: translateY(0) scale(1.03);
+          box-shadow: 0 16px 32px rgba(0,0,0,0.45);
+        }
+
+        /* IMAGE AREA */
+        .thumb {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 3;   /* guarantees height -> you’ll see the photo */
+          border-radius: 0.9rem;
+          overflow: hidden;
+          background: rgba(0,0,0,0.25);
+        }
+        .member-photo, .role-icon {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
         .role-icon {
-          width: 120px;
-          height: 120px;
-          margin-bottom: 1.5rem;
+          object-fit: contain;   /* icons keep proportions */
+          padding: 12%;
+          filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
         }
-        .card span {
-          font-weight: 600;
-          font-size: 1.2rem;
+        .thumb-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(0,0,0,0.35), transparent 55%);
+        }
+
+        /* META */
+        .meta {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.9rem 0.25rem 0.25rem;
+        }
+        .meta h3 {
+          font-size: 1.25rem;
           color: #fff;
+          text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+          margin: 0;
+          letter-spacing: 0.3px;
         }
+        .chip {
+          background: rgba(0,0,0,0.28);
+          color: #fff;
+          font-size: 0.9rem;
+          padding: 0.35rem 0.6rem;
+          border-radius: 999px;
+          box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+        }
+
         @keyframes fadeInUp {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          to { opacity: 1; transform: translateY(0); }
         }
-        @media (max-width: 1024px) {
-          .cards {
-            grid-template-columns: repeat(4, 1fr);
-          }
+
+        @media (max-width: 1200px) {
+          .cards { grid-template-columns: repeat(4, 1fr); }
         }
-        @media (max-width: 768px) {
-          .cards {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            margin: 0 auto;
-          }
-          .card {
-            width: 80%;
-            max-width: 300px;
-            padding: 1.5rem;
-          }
-          .role-icon {
-            width: 80px;
-            height: 80px;
-          }
+        @media (max-width: 920px) {
+          .cards { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 680px) {
+          .cards { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 460px) {
+          .cards { grid-template-columns: 1fr; }
         }
       `}</style>
     </section>

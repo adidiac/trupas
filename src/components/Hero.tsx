@@ -1,11 +1,11 @@
 // src/components/Hero.tsx
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Hero() {
   const messages = [
-    "Trupas - Muzică live pentru evenimente de neuitat",
+    'Trupas - Muzică live pentru evenimente de neuitat',
     'Energie pură pentru nunta ta',
     'Emoție în fiecare notă',
     'Profesionalism garantat',
@@ -15,14 +15,20 @@ export default function Hero() {
   const [current, setCurrent] = useState(0)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % messages.length)
+    const id = window.setInterval(() => {
+      setCurrent((p) => (p + 1) % messages.length)
     }, 3000)
-    return () => clearInterval(interval)
+    return () => window.clearInterval(id)
   }, [])
 
+  // If a side video errors, just hide it so layout doesn't look broken
+  const hideOnError = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    e.currentTarget.style.display = 'none'
+  }
+
   return (
-    <section className="hero-three">
+    <section className="hero-three" aria-label="Hero Trupas">
+      {/* Desktop: 3 videos. Mobile: only center (CSS below) */}
       <video
         className="vid vid-left"
         src="https://trupas.blob.core.windows.net/videos/video1.mp4"
@@ -30,6 +36,9 @@ export default function Hero() {
         muted
         loop
         playsInline
+        preload="metadata"
+        onError={hideOnError}
+        aria-hidden="true"
       />
       <video
         className="vid vid-center"
@@ -38,6 +47,9 @@ export default function Hero() {
         muted
         loop
         playsInline
+        preload="auto"
+        onError={hideOnError}
+        aria-hidden="true"
       />
       <video
         className="vid vid-right"
@@ -46,77 +58,107 @@ export default function Hero() {
         muted
         loop
         playsInline
+        preload="metadata"
+        onError={hideOnError}
+        aria-hidden="true"
       />
 
+      {/* Tint + vignette overlay so the text is readable */}
       <div className="overlay" />
 
+      {/* Rotating tagline */}
       <h1 className="hero-title">
-        <span key={current} className="fade">{messages[current]}</span>
+        <span className="title-bg">
+          <span key={current} className="fade">
+            {messages[current]}
+          </span>
+        </span>
       </h1>
 
       <style jsx>{`
         .hero-three {
           position: relative;
-          margin-top: -64px;
+          margin-top: -64px; /* sit under the fixed navbar */
           width: 100vw;
           height: calc(100vh + 64px);
           display: flex;
           overflow: hidden;
+          background: #000; /* safe background while videos load */
         }
+
         .vid {
           flex: 1;
           height: calc(100vh + 64px);
           width: auto;
           object-fit: cover;
+          /* push crop slightly down to keep faces in frame on portrait videos */
+          object-position: 50% 68%;
+          background: #000;
         }
+
         .overlay {
           position: absolute;
           inset: 0;
-          background: rgba(59, 6, 82, 0.5);
+          background:
+            radial-gradient(120% 80% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 70%, rgba(0,0,0,0.6) 100%),
+            rgba(59, 6, 82, 0.45);
           pointer-events: none;
+          z-index: 1;
         }
-       .hero-title {
+
+        .hero-title {
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          color: #fff;
-          /* fluid font size: min 2rem, scales with viewport, max 5rem */
-          font-size: clamp(2rem, 5vw, 5rem);
-          font-weight: 800;
-          letter-spacing: 1px;
-          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
           z-index: 2;
-          /* allow multi-line and wrap */
-          width: 90%;
-          max-width: 800px;
+          width: min(90vw, 1000px);
           text-align: center;
-          white-space: normal;
-          overflow: visible;
-          line-height: 1.1;
+          line-height: 1.15;
         }
+
+        .title-bg {
+          display: inline-block;
+          padding: 0.6rem 1rem;
+          border-radius: 12px;
+          backdrop-filter: blur(6px);
+          background: rgba(0, 0, 0, 0.25);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
         .hero-title .fade {
-          display: block;
+          display: inline-block;
+          color: #fff;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+          font-size: clamp(1.75rem, 5.2vw, 4.5rem);
           opacity: 0;
-          animation: fadeIn 1s ease-out forwards;
+          animation: fadeIn 900ms ease-out forwards;
+          white-space: normal; /* allow wrapping */
+          word-break: keep-all;
         }
+
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(16px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+
+        /* Mobile: show only center video full-screen */
         @media (max-width: 768px) {
           .vid-left,
           .vid-right {
-            display: none;
+            display: none !important;
           }
           .vid-center {
             flex: none;
             width: 100vw;
             height: calc(100vh + 64px);
             margin-top: -64px;
+            object-position: 50% 70%;
           }
-          .hero-title {
-            font-size: clamp(1.5rem, 6vw, 3rem);
+          .title-bg {
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
           }
         }
       `}</style>

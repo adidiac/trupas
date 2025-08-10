@@ -35,7 +35,7 @@ export default function Navbar() {
         </button>
 
         <ul className={`nav-list ${menuOpen ? 'open' : ''}`}>
-          {['despre', 'repertoriu', 'servicii', 'oferta', 'contact'].map((id) => (
+          {['despre','media', 'repertoriu', 'servicii', 'recenzii','FAQ','contact'].map((id) => (
             <li key={id}>
               <a href={`#${id}`} onClick={() => setMenuOpen(false)}>
                 {id.charAt(0).toUpperCase() + id.slice(1)}

@@ -127,7 +127,8 @@ export default function Contact() {
         </form>
 
         <div className="contact-info">
-          <p>Ne găsești și pe:</p>
+          <p style={{ color: '#f0c040' }}>
+          Ne găsești și pe:</p>
           <div className="social-links">
             <a
               href="https://facebook.com/trupasbrasov"

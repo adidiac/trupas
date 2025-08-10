@@ -1,0 +1,3 @@
+https://trupas.blob.core.windows.net/videos/video1.mp4
+https://trupas.blob.core.windows.net/videos/video2.mp4
+https://trupas.blob.core.windows.net/videos/video3.mp4
