@@ -14,7 +14,7 @@ const faqs = [
   },
   {
     q: 'Cântați și muzica populară / folclor?',
-    a: 'Da. Avem solistă de muzică populară ce interpretează melodii de folclor de majoritatea zonelor țării.',
+    a: 'Da. Avem solistă de muzică populară ce interpretează melodii de folclor din majoritatea zonelor țării.',
   },
   {
     q: 'Călătoriți în toată țara?',
