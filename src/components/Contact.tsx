@@ -1,35 +1,25 @@
 // src/components/Contact.tsx
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, ValidationError } from '@formspree/react'
 
 export default function Contact() {
   const [state, handleSubmit] = useForm('xovlnrdr')
   const [showModal, setShowModal] = useState(false)
-  const formRef = useRef<HTMLFormElement>(null)
 
-  // Track date value to drive the iOS-safe faux placeholder
-  const [dateValue, setDateValue] = useState<string>('')
-
-  // Show success modal and clear form
   useEffect(() => {
-    if (state.succeeded) {
-      setShowModal(true)
-      // Clear the form fields
-      formRef.current?.reset()
-      setDateValue('')
-    }
+    if (state.succeeded) setShowModal(true)
   }, [state.succeeded])
 
-  // Particles background
+  // particles bg
   useEffect(() => {
-    const canvas = document.getElementById('bg-particles-contact') as HTMLCanvasElement | null
+    const canvas = document.getElementById('bg-particles-contact') as HTMLCanvasElement
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let particles: { x: number; y: number; vx: number; vy: number; size: number }[] = []
+    let particles: { x:number; y:number; vx:number; vy:number; size:number }[] = []
     const count = 75
 
     function resize() {
@@ -48,21 +38,18 @@ export default function Contact() {
     function loop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = 'rgba(240,192,64,0.3)'
-      particles.forEach((p) => {
+      particles.forEach(p => {
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
         ctx.fill()
-        p.x += p.vx
-        p.y += p.vy
+        p.x += p.vx; p.y += p.vy
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1
       })
       requestAnimationFrame(loop)
     }
 
-    resize()
-    init()
-    loop()
+    resize(); init(); loop()
     window.addEventListener('resize', resize)
     return () => window.removeEventListener('resize', resize)
   }, [])
@@ -72,56 +59,35 @@ export default function Contact() {
       <canvas id="bg-particles-contact" className="bg-canvas" />
 
       <h2>Contact</h2>
+
       <div className="contact-container">
-        <form ref={formRef} onSubmit={handleSubmit} className="contact-form" noValidate>
+        <form onSubmit={handleSubmit} className="contact-form" noValidate>
           <input id="name" name="name" placeholder="Nume" required />
           <ValidationError prefix="Name" field="name" errors={state.errors} />
 
           <input id="email" name="email" type="email" placeholder="Email" required />
           <ValidationError prefix="Email" field="email" errors={state.errors} />
 
-          <input
-            id="phone"
-            name="phone"
-            type="tel"
-            inputMode="tel"
-            placeholder="Număr de telefon"
-            required
-          />
+          <input id="phone" name="phone" type="tel" placeholder="Număr de telefon" required />
           <ValidationError prefix="Phone" field="phone" errors={state.errors} />
 
-          {/* iOS-friendly date with faux placeholder */}
-          <div
-            className="date-field"
-            data-has-value={dateValue ? 'true' : 'false'}
-            aria-live="polite"
-          >
+          {/* DATE — full width & consistent height on iOS */}
+          <div className="date-field">
             <input
               id="date"
               name="date"
               type="date"
-              value={dateValue}
-              onChange={(e) => setDateValue(e.target.value)}
-              // On iOS, tapping should open the native picker reliably
-              onFocus={(e) => e.currentTarget.showPicker?.()}
               required
+              aria-label="Data nunții"
             />
-            <span className="date-placeholder">Data nunții (ZZ.LL.AAAA)</span>
+            <label htmlFor="date">Data nunții</label>
           </div>
           <ValidationError prefix="Date" field="date" errors={state.errors} />
 
           <input id="city" name="city" placeholder="Orașul" required />
           <ValidationError prefix="City" field="city" errors={state.errors} />
 
-          <input
-            id="guests"
-            name="guests"
-            type="number"
-            inputMode="numeric"
-            min={1}
-            placeholder="Număr estimativ de invitați"
-            required
-          />
+          <input id="guests" name="guests" type="number" placeholder="Număr estimativ de invitați" required />
           <ValidationError prefix="Guests" field="guests" errors={state.errors} />
 
           <textarea id="message" name="message" placeholder="Detalii eveniment" required />
@@ -135,40 +101,28 @@ export default function Contact() {
         <div className="contact-info">
           <p style={{ color: '#f0c040' }}>Ne găsești și pe:</p>
           <div className="social-links">
-            <a href="https://facebook.com/trupasbrasov" target="_blank" className="social-link" rel="noreferrer">
-              <img src="https://cdn.simpleicons.org/facebook/fff" alt="Facebook" className="social-icon" />
-              Facebook
+            <a href="https://facebook.com/trupasbrasov" target="_blank" className="social-link">
+              <img src="https://cdn.simpleicons.org/facebook/fff" alt="Facebook" className="social-icon" /> Facebook
             </a>
-            <a href="https://instagram.com/trupasband" target="_blank" className="social-link" rel="noreferrer">
-              <img src="https://cdn.simpleicons.org/instagram/fff" alt="Instagram" className="social-icon" />
-              Instagram
+            <a href="https://instagram.com/trupasband" target="_blank" className="social-link">
+              <img src="https://cdn.simpleicons.org/instagram/fff" alt="Instagram" className="social-icon" /> Instagram
             </a>
-            <a href="https://tiktok.com/@trupas_band" target="_blank" className="social-link" rel="noreferrer">
-              <img src="https://cdn.simpleicons.org/tiktok/fff" alt="TikTok" className="social-icon" />
-              TikTok
+            <a href="https://tiktok.com/@trupas_band" target="_blank" className="social-link">
+              <img src="https://cdn.simpleicons.org/tiktok/fff" alt="TikTok" className="social-icon" /> TikTok
             </a>
-            <a href="https://www.youtube.com/@TRUPAS-u4q" target="_blank" className="social-link" rel="noreferrer">
-              <img src="https://cdn.simpleicons.org/youtube/fff" alt="YouTube" className="social-icon" />
-              YouTube
+            <a href="https://www.youtube.com/@TRUPAS-u4q" target="_blank" className="social-link">
+              <img src="https://cdn.simpleicons.org/youtube/fff" alt="YouTube" className="social-icon" /> YouTube
             </a>
           </div>
           <p className="phone">+40 744 842 061</p>
         </div>
       </div>
 
-      {/* popup modal overlay */}
       {showModal && (
-        <div className="thank-overlay" role="dialog" aria-modal="true" aria-labelledby="thanks-title">
-          <div className="thank-modal">
-            <button
-              className="close-btn"
-              onClick={() => setShowModal(false)}
-              aria-label="Închide"
-              type="button"
-            >
-              ×
-            </button>
-            <h2 id="thanks-title">Mulțumim!</h2>
+        <div className="thank-overlay" onClick={() => setShowModal(false)}>
+          <div className="thank-modal" onClick={e => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setShowModal(false)} aria-label="Închide">×</button>
+            <h2>Mulțumim!</h2>
             <p>Mesajul tău a fost trimis cu succes. Te vom contacta curând.</p>
           </div>
         </div>
@@ -188,170 +142,104 @@ export default function Contact() {
           align-items: center;
           text-align: center;
         }
-        .bg-canvas {
-          position: absolute;
-          top: 0; left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 0;
-        }
+        .bg-canvas { position:absolute; inset:0; width:100%; height:100%; z-index:0; }
+
         h2 {
-          position: relative;
-          z-index: 1;
-          font-size: 3rem;
-          margin-bottom: 4rem;
+          position: relative; z-index: 1;
+          font-size: 3rem; margin-bottom: 4rem;
           background: linear-gradient(90deg, #64fff9, #f0c040);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           animation: fadeInUp 0.6s ease-out;
         }
+
         .contact-container {
-          position: relative;
-          z-index: 1;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 4rem;
-          width: 100%;
-          max-width: 1000px;
-        }
-        .contact-form {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          animation: fadeInUp 0.6s ease-out 0.2s both;
-        }
-        .contact-form input,
-        .contact-form textarea {
-          padding: 0.75rem 1rem;
-          border: 1px solid #555;
-          border-radius: 0.5rem;
-          background: rgba(0,0,0,0.3);
-          color: #fff;
-          font-size: 1rem;
-          width: 100%;
-        }
-        .contact-form textarea {
-          min-height: 120px;
-          resize: vertical;
+          position: relative; z-index: 1;
+          display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+          width: 100%; max-width: 1000px;
         }
 
-        /* DATE FIELD (iOS-friendly placeholder) */
-        .date-field {
-          position: relative;
+        .contact-form { display: flex; flex-direction: column; gap: 1rem; animation: fadeInUp 0.6s ease-out 0.2s both; }
+
+        /* Make ALL fields full width and same height */
+        .contact-form input,
+        .contact-form textarea {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0.9rem 1rem;
+          border: 1px solid #555;
+          border-radius: 0.75rem;
+          background: rgba(0,0,0,0.3);
+          color: #fff;
+          font-size: 16px; /* prevents iOS zoom on focus */
+        }
+        .contact-form textarea { min-height: 120px; resize: vertical; }
+
+        /* iOS date input fixes */
+        .date-field { position: relative; text-align: left; }
+        .date-field label {
+          position: absolute;
+          left: 12px;
+          top: -10px;
+          padding: 0 6px;
+          font-size: 0.85rem;
+          background: #24243e;
+          color: #cfcfcf;
+          border-radius: 6px;
         }
         .date-field input[type='date'] {
+          -webkit-appearance: none;
+          appearance: none;
           width: 100%;
-          padding-right: 2.25rem; /* space for calendar icon */
-        }
-        /* iOS Safari: hide native date text when empty */
-        .date-field[data-has-value='false'] input[type='date'] {
-          color: transparent;
-          caret-color: transparent;
-        }
-        .date-field[data-has-value='false'] input[type='date']::-webkit-datetime-edit {
-          color: transparent;
-        }
-        .date-field[data-has-value='false'] input[type='date']::-webkit-clear-button,
-        .date-field[data-has-value='false'] input[type='date']::-webkit-inner-spin-button {
-          display: none;
-        }
-        .date-field[data-has-value='false'] input[type='date']::-webkit-calendar-picker-indicator {
-          opacity: 0.8;
-        }
-        .date-field input[type='date']:focus::-webkit-datetime-edit,
-        .date-field[data-has-value='true'] input[type='date']::-webkit-datetime-edit {
+          min-height: 52px;        /* same “feel” as other fields */
+          padding: 0.9rem 1rem;
+          border: 1px solid #555;
+          border-radius: 0.75rem;
+          background: rgba(0,0,0,0.3);
           color: #fff;
-          caret-color: auto;
+          color-scheme: dark;      /* makes picker match dark theme */
         }
-        .date-placeholder {
-          pointer-events: none;
-          position: absolute;
-          left: 1rem;
-          top: 50%;
-          transform: translateY(-50%);
-          color: #bbb;
-          transition: opacity .2s ease, transform .2s ease;
-          font-size: 1rem;
+        /* Improve the inline value legibility on WebKit */
+        .date-field input[type='date']::-webkit-date-and-time-value {
+          text-align: left;
+          padding: 0 2px;
         }
-        .date-field[data-has-value='true'] .date-placeholder,
-        .date-field input[type='date']:focus + .date-placeholder {
-          opacity: 0;
-          transform: translateY(-60%);
+        /* Bigger calendar icon tap target on iOS */
+        .date-field input[type='date']::-webkit-calendar-picker-indicator {
+          filter: invert(1);
+          opacity: 0.9;
+          cursor: pointer;
+          padding: 0 6px;
         }
 
         .contact-form button {
-          padding: 0.75rem 1rem;
-          background: #f0c040;
-          color: #0f0c29;
-          border: none;
-          border-radius: 0.5rem;
-          font-weight: 600;
-          cursor: pointer;
+          padding: 0.9rem 1rem;
+          background: #f0c040; color: #0f0c29;
+          border: none; border-radius: 0.75rem;
+          font-weight: 700; cursor: pointer;
           transition: background 0.2s ease;
         }
-        .contact-form button:hover {
-          background: #64fff9;
-        }
+        .contact-form button:hover { background: #64fff9; }
+
         .contact-info {
           animation: fadeInUp 0.6s ease-out 0.4s both;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          gap: 1rem;
-          font-size: 1rem;
+          display: flex; flex-direction: column; justify-content: center;
+          gap: 1rem; font-size: 1rem;
         }
-        .social-links {
-          display: flex;
-          gap: 1rem;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-        .social-link {
-          display: inline-flex;
-          align-items: center;
-          color: #64fff9;
-          text-decoration: none;
-          transition: color 0.2s;
-        }
+        .social-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        .social-link { display: inline-flex; align-items: center; color: #64fff9; text-decoration: none; transition: color 0.2s; }
         .social-link:hover { color: #f0c040; }
-        .social-icon {
-          width: 24px; height: 24px; margin-right: 0.5rem; vertical-align: middle;
-        }
-        .phone {
-          font-size: 1.25rem; font-weight: 600; color: #fff;
-        }
+        .social-icon { width: 24px; height: 24px; margin-right: 0.5rem; }
 
-        .thank-overlay {
-          position: fixed; inset: 0;
-          background: rgba(0,0,0,0.6);
-          display: flex; align-items: center; justify-content: center;
-          z-index: 100;
-          animation: fadeInUp 0.5s ease-out;
-        }
-        .thank-modal {
-          position: relative;
-          background: #302b63;
-          padding: 2rem 3rem;
-          border-radius: 1rem;
-          text-align: center;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-          max-width: 90vw;
-        }
-        .thank-modal h2 {
-          margin: 0 0 1rem;
-          font-size: 2.2rem;
-          color: #64fff9;
-        }
+        .phone { font-size: 1.25rem; font-weight: 600; color: #fff; }
+
+        .thank-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 100; animation: fadeInUp 0.5s ease-out; }
+        .thank-modal { position: relative; background: #302b63; padding: 2rem 3rem; border-radius: 1rem; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+        .thank-modal h2 { margin: 0 0 1rem; font-size: 2.2rem; color: #64fff9; }
         .thank-modal p { color: #efefef; font-size: 1.05rem; }
-        .close-btn {
-          position: absolute; top: 0.5rem; right: 0.5rem;
-          background: transparent; border: none; font-size: 2rem; color: #fff; cursor: pointer;
-        }
+        .close-btn { position: absolute; top: 0.5rem; right: 0.5rem; background: transparent; border: none; font-size: 2rem; color: #fff; cursor: pointer; }
 
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 800px) {
           .contact-container { grid-template-columns: 1fr; }
