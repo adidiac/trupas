@@ -5,9 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 const services = [
   'Muzică live pentru nunți, botezuri, petreceri private, corporate events',
-  'Repertoriu personalizat în funcție de dorințele tale',
-  'Pachet complet de suport tehnic: sistem sonorizare, backline-monitoare, mixer',
-  'Schela lumini: beam-uri, spoturi, LED par',
+  'Repertoriu variat si vast ce ne permite sa fim flexibili si să ne adaptam in funcție de invitați',
 ]
 
 /**

@@ -20,7 +20,7 @@ const members: Member[] = [
   { role: 'Tobe',           slug: 'tobe',           name: 'George' },
   { role: 'Trompeta',       slug: 'trompeta',       name: 'Sorin' },
   { role: 'Saxofon',        slug: 'saxofon',        name: 'Saxofon' },
-  { role: 'DJ',             slug: 'dj',             name: 'DJ' },
+  { role: 'DJ',             slug: 'dj',             name: 'Andrei' },
 ]
 
 // card background colors (shuffled across)
@@ -32,7 +32,7 @@ const colors = [
 // build default photo path from name
 function photoFromName(name: string) {
   const base = `/media/members/${name.toLowerCase()}`
-  if (name.toLowerCase() === 'saxofon') {
+  if (name.toLowerCase() === 'saxofon' || name.toLowerCase() === 'andrei') {
     return [`${base}.png`, `${base}.webp`, `${base}.jpg`, ]
   }
   return [`${base}.jpeg`, `${base}.png`, `${base}.webp`]

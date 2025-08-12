@@ -68,16 +68,17 @@ export default function About() {
         <div className="text-block">
           <h2>Despre Trupas</h2>
           <p>
-            Suntem o trupă inovatoare care redefinește energia muzicii live cu tehnologii
-            avansate și performanțe captivante.
+            Suntem o trupă plină de pasiune și entuziasm, gata să aducă energia muzicii live la evenimentul tău.
           </p>
           <p>
-            Repertoriul nostru acoperă un spectru larg: de la hituri internaționale remixate
-            cu efecte synthwave, până la piese tradiționale reinterpretate în stil cyber-folk.
+            Credem că o petrecere reușită are nevoie de varietate, iar noi suntem pregătiți să cântăm pentru toate vârstele. 
+            Repertoriul nostru include de la hituri internaționale și muzică balcanică, până la șlagăre românești, 
+            piese tradiționale reinterpretate și, bineînțeles, muzică populară, esențială la orice petrecere.
           </p>
           <p>
-            Cu peste 10 ani de experiență, echipament 4K, lumini inteligente și efecte laser,
-            transformăm fiecare eveniment într-o aventură futuristă.
+            Ne-am înființat in anul 2024 sub numele de Trupas Band, cu scopul de a oferi o experiență muzicală live de neuitat. 
+            Fiecare dintre noi aduce o experiență de peste 10 ani, acumulată în cadrul numeroaselor evenimente private, 
+            garantând astfel profesionalism și experiență, esențială in reușita fiecărei petreceri.
           </p>
         </div>
       </div>

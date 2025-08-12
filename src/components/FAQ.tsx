@@ -6,35 +6,31 @@ import React, { useEffect } from 'react'
 const faqs = [
   {
     q: 'Cât cântați la o nuntă?',
-    a: 'Setul standard: ~4 x 45 min + 1 x 30 min (coffee concert). Putem adapta durata în funcție de programul evenimentului.',
+    a: 'Cântăm Live pe tot parcursul evenimentelui, exceptând pauzele de masă.',
   },
   {
-    q: 'Veniți cu sonorizare și lumini?',
-    a: 'Da. Asigurăm sistem complet de sonorizare, mixer, monitoare, microfoane și schelă de lumini (beam, spot, LED PAR).',
+    q: 'Ce se întâmplă în pauze? ',
+    a: 'În pauze intra DJ-ul cu muzica ambientală ori mixează anumite genuri muzicale, în funcție și de preferințele voastre.',
   },
   {
-    q: 'Aveți și muzică populară / folclor?',
-    a: 'Da. Avem solistă de muzică populară și coveruri balcanice/machedonești, plus un DJ pe toată durata evenimentului.',
-  },
-  {
-    q: 'Faceți pauze? Ce se întâmplă între seturi?',
-    a: 'Între seturi avem pauze scurte pentru schimbare de program. Atmosfera rămâne sus cu DJ & playlist personalizat.',
+    q: 'Cântați și muzica populară / folclor?',
+    a: 'Da. Avem solistă de muzică populară ce interpretează melodii de folclor de majoritatea zonelor țării.',
   },
   {
     q: 'Călătoriți în toată țara?',
     a: 'Da. Ne deplasăm oriunde. Se adaugă cost de transport (lei/km) și, pentru distanțe mari, cazare pentru echipă.',
   },
   {
-    q: 'Cât de devreme ar trebui să rezervăm?',
-    a: 'Ideal cu 6–12 luni înainte. Datele de vară se ocupă repede, dar scrie-ne — uneori avem soluții în ultimul moment.',
+    q: 'Cu cine semnăm mai întâi? Cu formația sau restaurantul?',
+    a: 'Pentru a merge la sigur ar trebui semnat cu ambele in paralel. Asigurați-vă de disponibilitatea restaurantului și a formației pe o anumită dată pe care v-o doriți și faceți contractul cu ambele în același timp.',
   },
   {
-    q: 'Cum stabilim repertoriul?',
-    a: 'Îți propunem un playlist-schelet pe zone (dance/pop, rock, balcanic, populară) și îl personalizăm împreună după public.',
+    q: 'Cum se stabilește repertoriul?',
+    a: 'Avem un playlist vast care ne permite să personalizăm fiecare petrecere în funcție de context și de invitații care sunt prezenți. Experiența acumulată, ne permite să ne orientăm în cadrul petrecerii cu ce melodii să abordăm invitații pentru a păstra vibe-ul ridicat pe tot parcursul evenimentului.',
   },
   {
-    q: 'Dacă se prelungește petrecerea?',
-    a: 'Putem extinde programul contra cost (prelungire pe oră). Confirmăm în seara evenimentului în funcție de energie și locație.',
+    q: 'Ce se întâmplă dacă se prelungește petrecerea mai mult de 8 ore?',
+    a: 'Dacă se prelungește ne asumăm, încă o oră / două în plus fără alte costuri suplimentare. În acest timp suplimentar putem cânta Live fie DJ să mixeze diferite genuri muzicale la cerere.',
   },
 ]
 

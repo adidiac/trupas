@@ -31,7 +31,7 @@ export default function Hero() {
       {/* Desktop: 3 videos. Mobile: only center (CSS below) */}
       <video
         className="vid vid-left"
-        src="https://trupas.blob.core.windows.net/videos/video1.mp4"
+        src="https://res.cloudinary.com/dssmjjqlj/video/upload/v1755015647/video3_eofs7h.mp4"
         autoPlay
         muted
         loop
@@ -42,7 +42,7 @@ export default function Hero() {
       />
       <video
         className="vid vid-center"
-        src="https://trupas.blob.core.windows.net/videos/video2.mp4"
+        src="https://res.cloudinary.com/dssmjjqlj/video/upload/v1755015646/video1_rzol7b.mp4"
         autoPlay
         muted
         loop
@@ -53,7 +53,7 @@ export default function Hero() {
       />
       <video
         className="vid vid-right"
-        src="https://trupas.blob.core.windows.net/videos/video3.mp4"
+        src="https://res.cloudinary.com/dssmjjqlj/video/upload/v1755015642/video2_kmbuuz.mp4"
         autoPlay
         muted
         loop
