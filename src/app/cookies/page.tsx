@@ -27,7 +27,7 @@ export default function CookiesPage() {
 
         <h2>Gestionare consimțământ</h2>
         <p>
-          Poți modifica oricând opțiunile privind cookie-urile media folosind butonul de mai jos.
+          Poți modifica oricând opțiunile privind cookie-urile media folosind butonul din pagina de start.
         </p>
         <p className="linkline">
           Pentru detalii despre datele personale, consultă <a href="/privacy">Politica de Confidențialitate</a>.
