@@ -1,4 +1,4 @@
-// src/pages/_document.tsx
+// src/pages/_document.tsx  (or pages/_document.tsx)
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
 export default class MyDocument extends Document {
@@ -6,8 +6,8 @@ export default class MyDocument extends Document {
     return (
       <Html lang="ro">
         <Head>
-          {/* our static stylesheet */}
-          <link rel="stylesheet" href="/styles.css" />
+          {/* put global meta only (no scripts that access window) */}
+          <meta name="theme-color" content="#24243e" />
         </Head>
         <body>
           <Main />

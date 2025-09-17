@@ -1,6 +1,6 @@
 // app/layout.tsx (SERVER component)
-import './globals.css'
 import type { Metadata } from 'next'
+import JsonLd from '@/components/JsonLd'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://trupasband.ro'),
@@ -41,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ro">
       <body>{children}</body>
+      <JsonLd />
     </html>
   )
 }
