@@ -3,6 +3,7 @@
 
 import React, { ReactNode } from 'react'
 import Navbar from './Navbar'
+import CookieBanner from './CookieBanner'
 
 const WHATSAPP_NUMBER = '+40744842061'; // Manager WhatsApp number
 const WHATSAPP_MESSAGE = encodeURIComponent('Bună! Aș dori mai multe detalii despre disponibilitate și preț.');
@@ -83,7 +84,8 @@ export default function Layout({ children }: Props) {
           width: 28px;
           height: 28px;
         }
-      `}</style>
+      `}</style>  
+    <CookieBanner />
     </>
   )
 }

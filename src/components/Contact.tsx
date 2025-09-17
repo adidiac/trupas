@@ -7,10 +7,9 @@ import { useForm, ValidationError } from '@formspree/react'
 export default function Contact() {
   const [state, handleSubmit] = useForm('xovlnrdr')
   const [showModal, setShowModal] = useState(false)
+  const [consent, setConsent] = useState(false)
 
-  useEffect(() => {
-    if (state.succeeded) setShowModal(true)
-  }, [state.succeeded])
+  useEffect(() => { if (state.succeeded) setShowModal(true) }, [state.succeeded])
 
   // particles bg
   useEffect(() => {
@@ -22,10 +21,7 @@ export default function Contact() {
     let particles: { x:number; y:number; vx:number; vy:number; size:number }[] = []
     const count = 75
 
-    function resize() {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
     function init() {
       particles = Array.from({ length: count }).map(() => ({
         x: Math.random() * canvas.width,
@@ -39,9 +35,7 @@ export default function Contact() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = 'rgba(240,192,64,0.3)'
       particles.forEach(p => {
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fill()
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill()
         p.x += p.vx; p.y += p.vy
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1
@@ -71,15 +65,9 @@ export default function Contact() {
           <input id="phone" name="phone" type="tel" placeholder="Număr de telefon" required />
           <ValidationError prefix="Phone" field="phone" errors={state.errors} />
 
-          {/* DATE — full width & consistent height on iOS */}
+          {/* DATE — iOS friendly */}
           <div className="date-field">
-            <input
-              id="date"
-              name="date"
-              type="date"
-              required
-              aria-label="Data nunții"
-            />
+            <input id="date" name="date" type="date" required aria-label="Data nunții" />
             <label htmlFor="date">Data nunții</label>
           </div>
           <ValidationError prefix="Date" field="date" errors={state.errors} />
@@ -93,7 +81,27 @@ export default function Contact() {
           <textarea id="message" name="message" placeholder="Detalii eveniment" required />
           <ValidationError prefix="Message" field="message" errors={state.errors} />
 
-          <button type="submit" disabled={state.submitting}>
+          {/* CONSENT OBLIGATORIU */}
+          <div className="consent">
+            <label htmlFor="consent">
+              <input
+                id="consent"
+                name="consent"
+                type="checkbox"
+                required
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+              />
+              <span>
+                Am citit și sunt de acord cu{' '}
+                <a href="/privacy">Politica de Confidențialitate</a>.
+              </span>
+            </label>
+          </div>
+          {/* opțional: versiune/ștampilă consimțământ */}
+          <input type="hidden" name="_consent_version" value="privacy-v1-2025-01" />
+
+          <button type="submit" disabled={!consent || state.submitting}>
             {state.submitting ? 'Se trimite…' : 'Cere ofertă'}
           </button>
         </form>
@@ -118,9 +126,10 @@ export default function Contact() {
         </div>
       </div>
 
+      {/* popup modal overlay */}
       {showModal && (
         <div className="thank-overlay" onClick={() => setShowModal(false)}>
-          <div className="thank-modal" onClick={e => e.stopPropagation()}>
+          <div className="thank-modal" onClick={(e) => e.stopPropagation()}>
             <button className="close-btn" onClick={() => setShowModal(false)} aria-label="Închide">×</button>
             <h2>Mulțumim!</h2>
             <p>Mesajul tău a fost trimis cu succes. Te vom contacta curând.</p>
@@ -130,26 +139,16 @@ export default function Contact() {
 
       <style jsx>{`
         .contact-section {
-          position: relative;
-          width: 100vw;
-          min-height: 100vh;
-          padding: 4rem 2rem;
-          background: #24243e;
-          color: #efefef;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
+          position: relative; width: 100vw; min-height: 100vh;
+          padding: 4rem 2rem; background: #24243e; color: #efefef;
+          overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center;
         }
         .bg-canvas { position:absolute; inset:0; width:100%; height:100%; z-index:0; }
 
         h2 {
-          position: relative; z-index: 1;
-          font-size: 3rem; margin-bottom: 4rem;
+          position: relative; z-index: 1; font-size: 3rem; margin-bottom: 4rem;
           background: linear-gradient(90deg, #64fff9, #f0c040);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           animation: fadeInUp 0.6s ease-out;
         }
 
@@ -161,71 +160,42 @@ export default function Contact() {
 
         .contact-form { display: flex; flex-direction: column; gap: 1rem; animation: fadeInUp 0.6s ease-out 0.2s both; }
 
-        /* Make ALL fields full width and same height */
         .contact-form input,
         .contact-form textarea {
-          width: 100%;
-          box-sizing: border-box;
-          padding: 0.9rem 1rem;
-          border: 1px solid #555;
-          border-radius: 0.75rem;
-          background: rgba(0,0,0,0.3);
-          color: #fff;
-          font-size: 16px; /* prevents iOS zoom on focus */
+          width: 100%; box-sizing: border-box; padding: 0.9rem 1rem;
+          border: 1px solid #555; border-radius: 0.75rem;
+          background: rgba(0,0,0,0.3); color: #fff; font-size: 16px;
         }
         .contact-form textarea { min-height: 120px; resize: vertical; }
 
-        /* iOS date input fixes */
         .date-field { position: relative; text-align: left; }
         .date-field label {
-          position: absolute;
-          left: 12px;
-          top: -10px;
-          padding: 0 6px;
-          font-size: 0.85rem;
-          background: #24243e;
-          color: #cfcfcf;
-          border-radius: 6px;
+          position: absolute; left: 12px; top: -10px; padding: 0 6px;
+          font-size: 0.85rem; background: #24243e; color: #cfcfcf; border-radius: 6px;
         }
         .date-field input[type='date'] {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 100%;
-          min-height: 52px;        /* same “feel” as other fields */
-          padding: 0.9rem 1rem;
-          border: 1px solid #555;
-          border-radius: 0.75rem;
-          background: rgba(0,0,0,0.3);
-          color: #fff;
-          color-scheme: dark;      /* makes picker match dark theme */
+          -webkit-appearance: none; appearance: none; width: 100%;
+          min-height: 52px; padding: 0.9rem 1rem; border: 1px solid #555; border-radius: 0.75rem;
+          background: rgba(0,0,0,0.3); color: #fff; color-scheme: dark;
         }
-        /* Improve the inline value legibility on WebKit */
-        .date-field input[type='date']::-webkit-date-and-time-value {
-          text-align: left;
-          padding: 0 2px;
+        .date-field input[type='date']::-webkit-date-and-time-value { text-align: left; padding: 0 2px; }
+        .date-field input[type='date']::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.9; cursor: pointer; padding: 0 6px; }
+
+        .consent { text-align: left; font-size: .95rem; color: #ddd; margin-top: .25rem; }
+        .consent label { display: flex; align-items: flex-start; gap: .55rem; cursor: pointer; }
+        .consent input[type='checkbox'] {
+          width: 20px; height: 20px; margin-top: 2px; accent-color: #f0c040;
         }
-        /* Bigger calendar icon tap target on iOS */
-        .date-field input[type='date']::-webkit-calendar-picker-indicator {
-          filter: invert(1);
-          opacity: 0.9;
-          cursor: pointer;
-          padding: 0 6px;
-        }
+        .consent a { color: #64fff9; text-decoration: underline; }
 
         .contact-form button {
-          padding: 0.9rem 1rem;
-          background: #f0c040; color: #0f0c29;
-          border: none; border-radius: 0.75rem;
-          font-weight: 700; cursor: pointer;
-          transition: background 0.2s ease;
+          padding: 0.9rem 1rem; background: #f0c040; color: #0f0c29;
+          border: none; border-radius: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s ease;
         }
         .contact-form button:hover { background: #64fff9; }
+        .contact-form button[disabled] { opacity: .6; cursor: not-allowed; }
 
-        .contact-info {
-          animation: fadeInUp 0.6s ease-out 0.4s both;
-          display: flex; flex-direction: column; justify-content: center;
-          gap: 1rem; font-size: 1rem;
-        }
+        .contact-info { animation: fadeInUp 0.6s ease-out 0.4s both; display: flex; flex-direction: column; justify-content: center; gap: 1rem; font-size: 1rem; }
         .social-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
         .social-link { display: inline-flex; align-items: center; color: #64fff9; text-decoration: none; transition: color 0.2s; }
         .social-link:hover { color: #f0c040; }

@@ -84,7 +84,7 @@ export default function Repertoire() {
   }, [])
 
   return (
-    <section id="repertoriu" className="repertoire-section">
+    <section id="membrii" className="membrii-section">
       <canvas id="bg-particles-rep" className="bg-canvas" />
       <h2>Componență trupă</h2>
 
@@ -137,7 +137,7 @@ export default function Repertoire() {
       </div>
 
       <style jsx>{`
-        .repertoire-section {
+        .membrii-section {
           position: relative;
           width: 100vw;
           min-height: 100vh;
