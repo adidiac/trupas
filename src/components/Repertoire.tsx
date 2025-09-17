@@ -84,7 +84,7 @@ export default function Repertoire() {
   }, [])
 
   return (
-    <section id="membrii" className="membrii-section">
+    <section id="membri" className="membrii-section">
       <canvas id="bg-particles-rep" className="bg-canvas" />
       <h2>Componență trupă</h2>
 
