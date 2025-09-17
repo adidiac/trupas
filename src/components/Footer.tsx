@@ -100,7 +100,10 @@ export default function Footer() {
             <li><a href="/cookies">Politica de cookie-uri</a></li>
             {/* Link pentru a redeschide bannerul de cookies */}
             <li>
-              <button type="button" className="linkLike" onClick={openCookiePrefs}>
+              <button
+                onClick={() => window.dispatchEvent(new Event('consent:open'))}
+                className="btn ghost"
+              >
                 Schimbă preferințele cookie
               </button>
             </li>

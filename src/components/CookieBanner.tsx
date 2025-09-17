@@ -6,11 +6,31 @@ import React, { useEffect, useState } from 'react'
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false)
 
+  // show on first visit OR when cineva cere explicit redeschiderea
   useEffect(() => {
-    try {
-      const dismissed = localStorage.getItem('consent-dismissed') === 'true'
-      if (!dismissed) setVisible(true)
-    } catch {}
+    const showIfNeeded = () => {
+      try {
+        const dismissed = localStorage.getItem('consent-dismissed') === 'true'
+        if (!dismissed) setVisible(true)
+      } catch {}
+    }
+    showIfNeeded()
+
+    const openHandler = () => setVisible(true)
+    const resetHandler = () => {
+      try {
+        localStorage.removeItem('consent-dismissed')
+        localStorage.removeItem('consent-media')
+      } catch {}
+      setVisible(true)
+    }
+
+    window.addEventListener('consent:open', openHandler as EventListener)
+    window.addEventListener('consent:reset', resetHandler as EventListener)
+    return () => {
+      window.removeEventListener('consent:open', openHandler as EventListener)
+      window.removeEventListener('consent:reset', resetHandler as EventListener)
+    }
   }, [])
 
   function acceptAll() {
@@ -34,11 +54,11 @@ export default function CookieBanner() {
   if (!visible) return null
 
   return (
-    <div className="cookie-banner" role="dialog" aria-live="polite">
+    <div className="cookie-banner" role="dialog" aria-live="polite" aria-label="Acord cookie-uri">
       <div className="cookie-inner">
         <p className="cookie-text">
           Folosim cookie-uri pentru a reda conținut YouTube și a îmbunătăți experiența.
-          Citește <a href="/privacy">Politica de Confidențialitate</a>.
+          Citește <a href="/cookies">Politica de Cookie</a> și <a href="/privacy">Politica de Confidențialitate</a>.
         </p>
         <div className="cookie-actions">
           <button className="btn outline" onClick={refuseAll} aria-label="Refuză cookie-urile">
