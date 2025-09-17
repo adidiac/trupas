@@ -8,6 +8,11 @@ export const metadata: Metadata = {
     default: 'TRUPAS – Trupă nuntă Brașov | Formație evenimente',
     template: '%s | TRUPAS',
   },
+    icons: {
+    icon: '/logo.png',
+    apple: '/apple-icon.png',
+    shortcut: '/favicon.ico'
+  },
   description:
     'TRUPAS – trupă de nuntă din Brașov. Muzică live, show-uri energice, repertoriu personalizat și DJ. Disponibil în toată țara.',
   keywords: [
